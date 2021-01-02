@@ -328,8 +328,24 @@ elseif(BLAS_VENDOR STREQUAL "Cray")
 #  if(CMAKE_Fortran_COMPILER_ID STREQUAL "XL")
 #    set(BLAS_LIBRARIES "-L$ENV{ESSL_DIR}/lib64" -lesslsmp)
 #  endif()
+#endif
+  message(STATUS "Will use Cray libsci math library on host")
   set(BLAS_LIBRARIES "-L$ENV{CRAY_LIBSCI_PREFIX_DIR}/lib" -lsci_cray)
+#  set(BLAS_LIBRARIES "-L/home/users/coe0209/bml" -lsci_cray)
 #  set(BLAS_LIBRARIES "-L$ENV{LAPACK_DIR}" "-L$ENV{BLASDIR}" -llapack -lblas)
+  set(BLAS_FOUND TRUE)
+  set(LAPACK_FOUND TRUE)
+elseif(BLAS_VENDOR STREQUAL "OpenBLAS")
+#  if(CMAKE_Fortran_COMPILER_ID STREQUAL "XL")
+#    set(BLAS_LIBRARIES "-L$ENV{ESSL_DIR}/lib64" -lesslsmp)
+#  endif()
+#endif
+  message(STATUS "Will use OpenBLAS math library on host")
+  set(BLAS_LIBRARIES "-L$ENV{OPENBLAS_ROOT}/lib" -lopenblas)
+  message(STATUS
+    "BLAS_LIBRARIES: ${MAGMA_INCLUDE_DIRS}\n"
+  )
+
   set(BLAS_FOUND TRUE)
   set(LAPACK_FOUND TRUE)
 elseif(BLAS_VENDOR STREQUAL "None")

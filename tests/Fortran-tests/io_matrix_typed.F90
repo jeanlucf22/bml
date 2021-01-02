@@ -33,7 +33,8 @@ contains
     DUMMY_KIND(DUMMY_PREC), allocatable :: a_dense(:, :)
     DUMMY_KIND(DUMMY_PREC), allocatable :: b_dense(:, :)
 
-    pid = getpid()
+!    pid = getpid()
+    pid = 1000
     write(pid_char,*)pid
     write(fname,*)"ftest_matrix",trim(adjustl(pid_char)),".mtx"
 
