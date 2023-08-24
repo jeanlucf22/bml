@@ -5,6 +5,8 @@
 #include "../bml_logger.h"
 #include "../bml_copy.h"
 #include "../bml_parallel.h"
+#include "../bml_utilities.h"
+#include "../bml_introspection.h"
 
 #include "bml_allocate_distributed2d.h"
 #include "bml_types_distributed2d.h"
@@ -38,29 +40,39 @@ void TYPED_FUNC(
 {
     // make a copy of A and B local submatrices
     bml_matrix_t *Atmp1 = bml_copy_new(A->matrix);
-    bml_matrix_t *Atmp2 = bml_copy_new(A->matrix);
+    bml_matrix_t *Atmp2;
 
     bml_matrix_t *Btmp1 = bml_copy_new(B->matrix);
-    bml_matrix_t *Btmp2 = bml_copy_new(B->matrix);
+    bml_matrix_t *Btmp2;
 
     // shift all submatrices A(i,j) to the left by i steps
     if (A->myprow > 0)
     {
+        int m = A->M / bml_sqrtint(A->ntasks);
+        Atmp2 = bml_noinit_matrix(bml_get_type(A->matrix),
+                                A->matrix_precision, A->n, m, sequential);
         int src, dst;
         MPI_Cart_shift(A->comm, 1, -1 * A->myprow, &src, &dst);
         bml_mpi_irecv(Atmp2, src, A->comm);
         bml_mpi_send(Atmp1, dst, A->comm);
         bml_mpi_irecv_complete(Atmp2);
+    }else{
+        Atmp2 = bml_copy_new(A->matrix);
     }
 
     // shift all submatrices B(i,j) up by j steps
     if (B->mypcol > 0)
     {
+        int m = B->M / bml_sqrtint(B->ntasks);
+        Btmp2 = bml_noinit_matrix(bml_get_type(B->matrix),
+                                B->matrix_precision, B->n, m, sequential);
         int src, dst;
         MPI_Cart_shift(B->comm, 0, -1 * B->mypcol, &src, &dst);
         bml_mpi_irecv(Btmp2, src, B->comm);
         bml_mpi_send(Btmp1, dst, B->comm);
         bml_mpi_irecv_complete(Btmp2);
+    }else{
+        Btmp2 = bml_copy_new(B->matrix);
     }
 
     // perform local submatrices multiplication
