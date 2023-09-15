@@ -55,7 +55,6 @@ void TYPED_FUNC(
         MPI_Cart_shift(A->comm, 1, -1 * A->myprow, &src, &dst);
         bml_mpi_irecv(Atmp2, src, A->comm);
         bml_mpi_send(Atmp1, dst, A->comm);
-        bml_mpi_irecv_complete(Atmp2);
     }else{
         Atmp2 = bml_copy_new(A->matrix);
     }
@@ -70,9 +69,18 @@ void TYPED_FUNC(
         MPI_Cart_shift(B->comm, 0, -1 * B->mypcol, &src, &dst);
         bml_mpi_irecv(Btmp2, src, B->comm);
         bml_mpi_send(Btmp1, dst, B->comm);
-        bml_mpi_irecv_complete(Btmp2);
     }else{
         Btmp2 = bml_copy_new(B->matrix);
+    }
+
+    // wait for communications to complete
+    if (A->myprow > 0)
+    {
+        bml_mpi_irecv_complete(Atmp2);
+    }
+    if (B->mypcol > 0)
+    {
+        bml_mpi_irecv_complete(Btmp2);
     }
 
     // perform local submatrices multiplication
@@ -94,7 +102,6 @@ void TYPED_FUNC(
             MPI_Cart_shift(A->comm, 1, -1, &src, &dst);
             bml_mpi_irecv(Atmp2, src, A->comm);
             bml_mpi_send(Atmp1, dst, A->comm);
-            bml_mpi_irecv_complete(Atmp2);
         }
 
         // Move local submatrices one step up
@@ -103,8 +110,11 @@ void TYPED_FUNC(
             MPI_Cart_shift(B->comm, 0, -1, &src, &dst);
             bml_mpi_irecv(Btmp2, src, B->comm);
             bml_mpi_send(Btmp1, dst, B->comm);
-            bml_mpi_irecv_complete(Btmp2);
         }
+
+        // wait for communications to complete
+        bml_mpi_irecv_complete(Atmp2);
+        bml_mpi_irecv_complete(Btmp2);
 
         // perform local submatrices multiplication
         bml_multiply(Atmp2, Btmp2, C->matrix, alpha, 1., threshold);
