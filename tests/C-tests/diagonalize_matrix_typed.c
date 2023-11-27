@@ -122,17 +122,17 @@ int TYPED_FUNC(
     eigenvectors = bml_zero_matrix(matrix_type, matrix_precision,
                                    N, M, distrib_mode);
 
-    aux = bml_zero_matrix(matrix_type, matrix_precision, N, M, distrib_mode);
-    aux1 = bml_zero_matrix(matrix_type, matrix_precision, N, M, distrib_mode);
-    aux2 = bml_zero_matrix(matrix_type, matrix_precision, N, M, distrib_mode);
-
     bml_diagonalize(A, eigenvalues, eigenvectors);
-
+//return 0;
+MPI_Barrier(MPI_COMM_WORLD);
+printf("eigenvectors\n");
     if (bml_getMyRank() == 0)
     {
         LOG_INFO("%s\n", "eigenvectors");
     }
     bml_print_bml_matrix(eigenvectors, 0, max_row, 0, max_col);
+//return 0;
+MPI_Barrier(MPI_COMM_WORLD);
     if (bml_getMyRank() == 0)
     {
         LOG_INFO("%s\n", "eigenvalues");
@@ -140,19 +140,33 @@ int TYPED_FUNC(
             LOG_INFO("val = %e  i%e\n", REAL_PART(eigenvalues[i]),
                      IMAGINARY_PART(eigenvalues[i]));
     }
-
+//return 0;
+MPI_Barrier(MPI_COMM_WORLD);
+//return 0;
+printf("bml_transpose_new\n");
     ct = bml_transpose_new(eigenvectors);
     if (bml_getMyRank() == 0)
     {
         LOG_INFO("%s\n", "transpose eigenvectors");
     }
+MPI_Barrier(MPI_COMM_WORLD);
+//return 0;
+printf("bml_multiply\n");
     bml_print_bml_matrix(ct, 0, max_row, 0, max_col);
-
-    bml_multiply(ct, eigenvectors, aux2, 1.0, 0.0, 0.0);        // C^t*C
+MPI_Barrier(MPI_COMM_WORLD);
+//return 0;
+    aux = bml_zero_matrix(matrix_type, matrix_precision, N, M, distrib_mode);
+    aux1 = bml_zero_matrix(matrix_type, matrix_precision, N, M, distrib_mode);
+    aux2 = bml_zero_matrix(matrix_type, matrix_precision, N, M, distrib_mode);
+bml_multiply(aux, aux1, aux2, 1.0, 0.0, 0.0); 
+//    bml_multiply(ct, eigenvectors, aux2, 1.0, 0.0, 0.0);        // C^t*C
+return 0;
 
     if (bml_getMyRank() == 0)
         LOG_INFO("C^t*C matrix:\n");
     bml_print_bml_matrix(aux2, 0, max_row, 0, max_col);
+MPI_Barrier(MPI_COMM_WORLD);
+//return 0;
     REAL_T *aux2_dense = bml_export_to_dense(aux2, dense_row_major);
     if (bml_getMyRank() == 0)
     {
@@ -170,6 +184,7 @@ int TYPED_FUNC(
         }
         bml_free_memory(aux2_dense);
     }
+MPI_Barrier(MPI_COMM_WORLD);
 
     id = bml_identity_matrix(matrix_type, matrix_precision, N, M,
                              distrib_mode);

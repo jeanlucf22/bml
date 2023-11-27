@@ -334,9 +334,9 @@ void TYPED_FUNC(
     {
         LOG_ERROR("Number of MPI tasks/row should divide matrix size\n");
     }
-    //printf("Matrix size: %d\n", na);
-    //printf("Number of MPI process rows: %d\n", np_rows);
-    //printf("Number of MPI process cols: %d\n", np_cols);
+    printf("Matrix size: %d\n", na);
+    printf("Number of MPI process rows: %d\n", np_rows);
+    printf("Number of MPI process cols: %d\n", np_cols);
 
     if (elpa_init(ELPA_API_VERSION) != ELPA_OK)
     {
@@ -380,7 +380,7 @@ void TYPED_FUNC(
     elpa_set(handle, "solver", ELPA_SOLVER_2STAGE, &error_elpa);
     assert(error_elpa == ELPA_OK);
 
-    elpa_set(handle, "nvidia-gpu", 1, &error_elpa);
+    elpa_set(handle, "amd-gpu", 1, &error_elpa);
     assert(error_elpa == ELPA_OK);
 
     bml_matrix_t *Alocal = A->matrix;
