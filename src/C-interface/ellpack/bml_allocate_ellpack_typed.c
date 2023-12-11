@@ -52,7 +52,6 @@ void TYPED_FUNC(
 #endif
 
     bml_deallocate_domain(A->domain);
-    bml_deallocate_domain(A->domain2);
     bml_free_memory(A->value);
     bml_free_memory(A->index);
     bml_free_memory(A->nnz);
@@ -160,7 +159,7 @@ bml_matrix_ellpack_t
     A->nnz = bml_allocate_memory(sizeof(int) * A->N);
     A->value = bml_noinit_allocate_memory(sizeof(REAL_T) * A->N * A->M);
     A->domain = bml_default_domain(A->N, A->M, distrib_mode);
-    A->domain2 = bml_default_domain(A->N, A->M, distrib_mode);
+    A->domain2 = NULL;
 
 #if defined(USE_OMP_OFFLOAD)
     int N = A->N;
@@ -228,7 +227,7 @@ bml_matrix_ellpack_t *TYPED_FUNC(
 #endif
 
     A->domain = bml_default_domain(N, M, distrib_mode);
-    A->domain2 = bml_default_domain(N, M, distrib_mode);
+    A->domain2 = NULL;
 
 #if defined(USE_OMP_OFFLOAD)
     REAL_T *A_value = A->value;

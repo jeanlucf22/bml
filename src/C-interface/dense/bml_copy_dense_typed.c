@@ -59,7 +59,6 @@ bml_matrix_dense_t *TYPED_FUNC(
 #endif // end of MKL_GPU
 #endif
     bml_copy_domain(A->domain, B->domain);
-    bml_copy_domain(A->domain2, B->domain2);
     return B;
 }
 
@@ -99,7 +98,6 @@ void TYPED_FUNC(
     if (A->distribution_mode == B->distribution_mode)
     {
         bml_copy_domain(A->domain, B->domain);
-        bml_copy_domain(A->domain2, B->domain2);
     }
 }
 

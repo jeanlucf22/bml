@@ -36,7 +36,6 @@ void TYPED_FUNC(
     bml_matrix_dense_t * A)
 {
     bml_deallocate_domain(A->domain);
-    bml_deallocate_domain(A->domain2);
 #ifdef BML_USE_MAGMA
     magma_int_t ret = magma_free(A->matrix);
     assert(ret == MAGMA_SUCCESS);
@@ -125,9 +124,8 @@ bml_matrix_dense_t *TYPED_FUNC(
     A->domain =
         bml_default_domain(matrix_dimension.N_rows, matrix_dimension.N_rows,
                            distrib_mode);
-    A->domain2 =
-        bml_default_domain(matrix_dimension.N_rows, matrix_dimension.N_rows,
-                           distrib_mode);
+    A->domain2 = NULL;
+
     return A;
 }
 
@@ -184,9 +182,7 @@ bml_matrix_dense_t *TYPED_FUNC(
     A->domain =
         bml_default_domain(matrix_dimension.N_rows, matrix_dimension.N_rows,
                            distrib_mode);
-    A->domain2 =
-        bml_default_domain(matrix_dimension.N_rows, matrix_dimension.N_rows,
-                           distrib_mode);
+    A->domain2 = NULL;
     return A;
 }
 

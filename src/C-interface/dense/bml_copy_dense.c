@@ -126,6 +126,8 @@ void
 bml_save_domain_dense(
     bml_matrix_dense_t * A)
 {
+    A->domain2 = bml_default_domain(A->N, A->N, A->distribution_mode);
+
     bml_copy_domain(A->domain, A->domain2);
 }
 
@@ -140,4 +142,6 @@ bml_restore_domain_dense(
     bml_matrix_dense_t * A)
 {
     bml_copy_domain(A->domain2, A->domain);
+
+    bml_deallocate_domain(A->domain2);
 }

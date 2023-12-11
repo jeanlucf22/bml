@@ -1,3 +1,4 @@
+#include "../bml_allocate.h"
 #include "../bml_copy.h"
 #include "../bml_logger.h"
 #include "../bml_parallel.h"
@@ -8,6 +9,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <assert.h>
 
 /** Copy an ellpack matrix - result is a new matrix.
  *
@@ -125,6 +127,9 @@ void
 bml_save_domain_ellpack(
     bml_matrix_ellpack_t * A)
 {
+    assert(A->domain2==NULL);
+    A->domain2 = bml_default_domain(A->N, A->N, A->distribution_mode);
+
     bml_copy_domain(A->domain, A->domain2);
 }
 
@@ -140,6 +145,8 @@ bml_restore_domain_ellpack(
 {
     bml_copy_domain(A->domain2, A->domain);
 
+    bml_deallocate_domain(A->domain2);
+    A->domain2=NULL;
 /*
     if (bml_printRank() == 1)
     {
