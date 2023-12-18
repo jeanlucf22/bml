@@ -372,8 +372,6 @@ void TYPED_FUNC(
     elpa_set(handle, "process_col", (int) my_pcol, &error_elpa);
     assert(error_elpa == ELPA_OK);
 
-    MPI_Barrier(MPI_COMM_WORLD);
-
     int success = elpa_setup(handle);
     assert(success == ELPA_OK);
 

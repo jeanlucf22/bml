@@ -7,6 +7,7 @@
 #include "bml_allocate_ellpack.h"
 #include "../bml_logger.h"
 
+#include <assert.h>
 #include <complex.h>
 #include <math.h>
 #include <stdlib.h>
@@ -19,6 +20,7 @@
 
 #ifdef BML_USE_MPI
 #include <mpi.h>
+extern MPI_Comm bml_mpi_comm;
 #endif
 
 /** Gather a bml matrix across MPI ranks.
@@ -32,6 +34,8 @@ void TYPED_FUNC(
     bml_matrix_ellpack_t * A)
 {
 #ifdef BML_USE_MPI
+    assert(bml_mpi_comm!=MPI_COMM_NULL);
+
     //int myRank = bml_getMyRank();
     //int nRanks = bml_getNRanks();
 
@@ -57,17 +61,17 @@ void TYPED_FUNC(
     // Number of non-zeros per row
     MPI_Allgatherv(MPI_IN_PLACE, 0, MPI_DATATYPE_NULL,
                    A_nnz, A_domain->localRowExtent,
-                   A_domain->localRowMin, MPI_INT, ccomm);
+                   A_domain->localRowMin, MPI_INT, bml_mpi_comm);
 
     // Indices
     MPI_Allgatherv(MPI_IN_PLACE, 0, MPI_DATATYPE_NULL,
                    A_index, A_domain->localElements, A_domain->localDispl,
-                   MPI_INT, ccomm);
+                   MPI_INT, bml_mpi_comm);
 
     // Values
     MPI_Allgatherv(MPI_IN_PLACE, 0, MPI_DATATYPE_NULL,
                    A_value, A_domain->localElements, A_domain->localDispl,
-                   REAL_MPI_TYPE, ccomm);
+                   REAL_MPI_TYPE, bml_mpi_comm);
 
 /*
     for (int i = 0; i < nRanks; i++)

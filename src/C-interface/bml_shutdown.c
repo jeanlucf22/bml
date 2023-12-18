@@ -40,4 +40,7 @@ bml_shutdownF(
 {
     bml_shutdownParallelF();
     // Future: shutdown GPUs, cublas, cusparse, etc.
+#ifdef BML_USE_MAGMA
+    magma_finalize();
+#endif
 }

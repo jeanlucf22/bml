@@ -15,7 +15,6 @@
 
 #ifdef BML_USE_MPI
 #include <mpi.h>
-extern MPI_Comm ccomm;
 #endif
 
 // Return total number of processors.

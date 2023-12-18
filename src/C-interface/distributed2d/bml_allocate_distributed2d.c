@@ -23,16 +23,22 @@ bml_setcomm_distributed2d(
     int mytask;
     MPI_Comm_rank(comm, &mytask);
     int p = bml_sqrtint(ntasks);
-    if (p * p != ntasks)
+    // create communicator only if valid for distributed2d
+    // format
+    // distributed2d format requires total number of tasks to be
+    // a square number
+    if (p * p == ntasks)
     {
-        LOG_ERROR
-            ("p=%d: invalid number of tasks. Must be an integer square.\n",
+        int dims[2] = { p, p };
+        int periods[2] = { 1, 1 };
+        int reorder = 0;
+        MPI_Cart_create(comm, 2, dims, periods, reorder, &s_comm);
+    }else{
+        LOG_INFO
+            ("p=%d: invalid number of tasks for distributed2d format. Must be an integer square.\n",
              p);
+
     }
-    int dims[2] = { p, p };
-    int periods[2] = { 1, 1 };
-    int reorder = 0;
-    MPI_Cart_create(comm, 2, dims, periods, reorder, &s_comm);
 
     // use seed based on task ID
     srand(13 * mytask + 17);
@@ -44,12 +50,17 @@ bml_setup_distributed2d(
     const int N,
     bml_matrix_distributed2d_t * A)
 {
-    assert(s_comm != MPI_COMM_NULL);
+    if (s_comm == MPI_COMM_NULL)
+    {
+        LOG_ERROR
+            ("Invalid communicator for _distributed2d format\n");
+    }
 
     A->comm = s_comm;
 
     int ntasks;
     MPI_Comm_size(s_comm, &ntasks);
+
     A->ntasks = ntasks;
 
     int mytask;

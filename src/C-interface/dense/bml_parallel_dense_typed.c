@@ -22,6 +22,8 @@
 #include <omp.h>
 #endif
 
+extern MPI_Comm bml_mpi_comm;
+
 /** Gather a bml matrix across MPI ranks.
  *
  *  \ingroup parallel_group
@@ -41,7 +43,7 @@ void TYPED_FUNC(
 
     MPI_Allgatherv(MPI_IN_PLACE, 0, MPI_DATATYPE_NULL,
                    A_matrix, A_domain->localElements,
-                   A_domain->localDispl, REAL_MPI_TYPE, ccomm);
+                   A_domain->localDispl, REAL_MPI_TYPE, bml_mpi_comm);
 #endif
 }
 

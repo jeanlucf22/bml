@@ -22,9 +22,7 @@
 static int myRank = 0;
 static int nRanks = 1;
 #ifdef BML_USE_MPI
-static MPI_Request *requestList;
-MPI_Comm ccomm;
-static int *rUsed;
+MPI_Comm bml_mpi_comm = MPI_COMM_NULL;
 #endif
 
 /** Initialize.
@@ -73,21 +71,14 @@ void
 bml_initParallel(
     MPI_Comm comm)
 {
-    ccomm = comm;
-    MPI_Comm_rank(ccomm, &myRank);
-    MPI_Comm_size(ccomm, &nRanks);
+    bml_mpi_comm = comm;
+    MPI_Comm_rank(bml_mpi_comm, &myRank);
+    MPI_Comm_size(bml_mpi_comm, &nRanks);
 
     if (bml_printRank())
         printf("MPI started in bml with %d ranks\n", nRanks);
 
     bml_setcomm_distributed2d(comm);
-
-    requestList = (MPI_Request *) malloc(nRanks * sizeof(MPI_Request));
-    rUsed = (int *) malloc(nRanks * sizeof(int));
-    for (int i = 0; i < nRanks; i++)
-    {
-        rUsed[i] = 0;
-    }
 }
 #endif
 
@@ -113,8 +104,6 @@ bml_shutdownParallel(
     void)
 {
 #ifdef BML_USE_MPI
-    free(requestList);
-    free(rUsed);
 #endif
 }
 
@@ -123,7 +112,7 @@ bml_barrierParallel(
     void)
 {
 #ifdef BML_USE_MPI
-    MPI_Barrier(ccomm);
+    MPI_Barrier(bml_mpi_comm);
 #endif
 }
 
@@ -135,7 +124,7 @@ bml_sumRealReduce(
     double sLocal[1], sGlobal[1];
 
     sLocal[0] = *value;
-    MPI_Allreduce(sLocal, sGlobal, 1, MPI_DOUBLE, MPI_SUM, ccomm);
+    MPI_Allreduce(sLocal, sGlobal, 1, MPI_DOUBLE, MPI_SUM, bml_mpi_comm);
     *value = sGlobal[0];
 #endif
 }
@@ -148,7 +137,7 @@ bml_minRealReduce(
     double sLocal[1], sGlobal[1];
 
     sLocal[0] = *value;
-    MPI_Allreduce(sLocal, sGlobal, 1, MPI_DOUBLE, MPI_MIN, ccomm);
+    MPI_Allreduce(sLocal, sGlobal, 1, MPI_DOUBLE, MPI_MIN, bml_mpi_comm);
     *value = sGlobal[0];
 #endif
 }
@@ -161,7 +150,7 @@ bml_maxRealReduce(
     double sLocal[1], sGlobal[1];
 
     sLocal[0] = *value;
-    MPI_Allreduce(sLocal, sGlobal, 1, MPI_DOUBLE, MPI_MAX, ccomm);
+    MPI_Allreduce(sLocal, sGlobal, 1, MPI_DOUBLE, MPI_MAX, bml_mpi_comm);
     *value = sGlobal[0];
 #endif
 }

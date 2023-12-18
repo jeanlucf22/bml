@@ -46,5 +46,8 @@ void
 bml_initF(
     int fcomm)
 {
+#ifdef BML_USE_MAGMA
+    magma_init();
+#endif
     bml_initParallelF(fcomm);
 }
