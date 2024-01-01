@@ -621,7 +621,7 @@ if(BML_ELLBLOCK_MEMPOOL)
   add_definitions(-DBML_ELLBLOCK_USE_MEMPOOL)
 endif()
 
-add_definitions(-D_POSIX_C_SOURCE=200112L)
+add_definitions(-D_POSIX_C_SOURCE=200809L)
 
 check_function_exists(posix_memalign HAVE_POSIX_MEMALIGN)
 if(HAVE_POSIX_MEMALIGN)

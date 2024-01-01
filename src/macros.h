@@ -43,7 +43,7 @@
 #if (defined(INTEL_SDK) || defined(CRAY_SDK) || defined(__IBMC__) || defined(__ibmxl__))
 #define BML_OFFLOAD_CHUNKS 1
 #else
-#define BML_OFFLOAD_CHUNKS 0
+#define BML_OFFLOAD_CHUNKS 1
 #endif
 
 #ifdef BML_OFFLOAD_CHUNKS

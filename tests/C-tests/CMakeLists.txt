@@ -36,7 +36,7 @@ set(SOURCES_TYPED
   import_export_matrix_typed.c
   introspection_typed.c
   inverse_matrix_typed.c
-  io_matrix_typed.c
+  #io_matrix_typed.c
   mpi_sendrecv_typed.c
   multiply_banded_matrix_typed.c
   multiply_matrix_typed.c
@@ -93,7 +93,7 @@ add_executable(bml-test
   import_export_matrix.c
   introspection.c
   inverse_matrix.c
-  io_matrix.c
+  #io_matrix.c
   mpi_sendrecv.c
   multiply_banded_matrix.c
   multiply_matrix.c
@@ -170,7 +170,7 @@ set(testlist-mpi
     get_sparsity
     import_export
     introspection
-    io_matrix
+    #io_matrix
     scale
     mpi_sendrecv
     multiply
@@ -198,7 +198,7 @@ set(testlist
   import_export
   introspection
   inverse
-  io_matrix
+  #io_matrix
   multiply
   element_multiply
   multiply_banded

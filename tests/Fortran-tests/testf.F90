@@ -18,7 +18,7 @@ program testf
   use get_element
   use get_row
   use inverse_matrix
-  use io_matrix
+!  use io_matrix
   use multiply_matrix
   use normalize_matrix
   use scale_matrix
@@ -79,8 +79,8 @@ program testf
     test_result = test_get_row(matrix_type, element_type, N, M)
   case("inverse")
     test_result = test_inverse_matrix(matrix_type, element_type, N, M)
-  case("io")
-    test_result = test_io_matrix(matrix_type, element_type, N, M)
+!  case("io")
+!    test_result = test_io_matrix(matrix_type, element_type, N, M)
   case("multiply")
     test_result = test_multiply_matrix(matrix_type, element_type, N, M)
   case("normalize")

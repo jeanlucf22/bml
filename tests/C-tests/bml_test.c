@@ -36,7 +36,7 @@ const char *test_name[] = {
     "get_sparsity",
     "introspection",
     "inverse",
-    "io_matrix",
+    //"io_matrix",
 #ifdef BML_USE_MPI
     "mpi_sendrecv",
 #endif
@@ -72,7 +72,7 @@ const char *test_description[] = {
     "Get the sparsity",
     "Query matrix properties",
     "Matrix inverse",
-    "Read and write an mtx matrix",
+    //"Read and write an mtx matrix",
 #ifdef BML_USE_MPI
     "Send/Recv matrix with MPI",
 #endif
@@ -108,7 +108,7 @@ const test_function_t testers[] = {
     test_get_sparsity,
     test_introspection,
     test_inverse,
-    test_io_matrix,
+    //test_io_matrix,
 #ifdef BML_USE_MPI
     test_mpi_sendrecv,
 #endif

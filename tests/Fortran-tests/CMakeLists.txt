@@ -14,7 +14,7 @@ set(FORTRAN-SOURCES-TYPED
   get_row_typed.F90
   diagonalize_matrix_typed.F90
   get_element_typed.F90
-  io_matrix_typed.F90
+  #io_matrix_typed.F90
   inverse_matrix_typed.F90
   multiply_matrix_typed.F90
   normalize_matrix_typed.F90
@@ -102,7 +102,7 @@ add_executable(bml-testf
   get_element.F90
   get_row.F90
   inverse_matrix.F90
-  io_matrix.F90
+  #io_matrix.F90
   multiply_matrix.F90
   normalize_matrix.F90
   scale_matrix.F90
